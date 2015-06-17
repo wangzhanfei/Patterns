@@ -1,6 +1,8 @@
 package com.wzf.xml_parse;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.dom4j.Document;
@@ -13,11 +15,13 @@ import com.wzf.test.Log;
 
 public abstract class BaseParse {
 
-	public abstract void startParse();
-
 	private String filePath = "E:\\MyEclipse\\Patterns\\config\\filter-config.xml";
 
-	Log log = Log.getInstance();
+	protected Log log = Log.getInstance();
+
+	protected Document document;
+
+	public abstract void startParse();
 
 	@SuppressWarnings("unchecked")
 	protected List<Element> getElementList(Element node, String childNode) {
@@ -39,11 +43,47 @@ public abstract class BaseParse {
 		}
 	}
 
-	protected Document getDocument() throws DocumentException {
+	protected Document getDocument() throws DocumentException,
+			FileNotFoundException {
+
+		if (document != null) {
+			return document;
+		}
+		File file = new File(filePath);
+
+		// try {
+		FileInputStream fis = new FileInputStream(file);
+
+		// ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		// int len = -1;
+		// byte buf[] = new byte[1024 * 8];
+		// while ((len = fis.read(buf)) != -1) {
+		// bos.write(buf, 0, len);
+		// }
+		// bos.flush();
+		// bos.close();
+		// System.out.println(bos.toString());
+		// } catch (FileNotFoundException e) {
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+
+		SAXReader reader = new SAXReader();
+		Document document = reader.read(fis);
+		return document;
+	}
+
+	protected Document getDocument(String filePath) throws DocumentException,
+			FileNotFoundException {
 		System.out.println(filePath);
 		File file = new File(filePath);
+
+		FileInputStream fis = new FileInputStream(file);
+
 		SAXReader reader = new SAXReader();
-		Document document = reader.read(file);
+		Document document = reader.read(fis);
 		return document;
 	}
 

@@ -1,9 +1,12 @@
 package com.wzf.xml_parse;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
+import junit.framework.Assert;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -31,6 +34,11 @@ public class FilterParse extends BaseParse {
 	public FilterParse() {
 
 	}
+	
+	public FilterParse(Document document) {
+		this.document=document;
+	}
+	
 
 	public void print() {
 		for (Entry<String, Class<?>> entry : filterMap.entrySet()) {
@@ -38,11 +46,11 @@ public class FilterParse extends BaseParse {
 			String path = entry.getValue().getName();
 			System.out.println(name + "   " + path);
 		}
-
+		System.out.println("过滤器链...................");
 		for (Entry<String, List<Class<?>>> entry : filterMapList.entrySet()) {
 			String name = entry.getKey();
 			List<Class<?>> pathList = entry.getValue();
-
+			System.out.println("---------------------------------------------");
 			for (Class<?> class1 : pathList) {
 				System.out.println(name + "    " + class1.getName());
 			}
@@ -55,7 +63,11 @@ public class FilterParse extends BaseParse {
 			Document document = getDocument();
 			parse(document);
 		} catch (DocumentException e) {
-			throwException(null, "没有发现配置文件");
+			// throwException(null, "没有发现配置文件");
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -129,6 +141,8 @@ public class FilterParse extends BaseParse {
 		// 4.在3的过程中不能重复引用已经出现过的filter-list标签（不能名字重复）,不能重复是对于单个filter-list标签列表
 		HashMap<String, List<String>> filter_list_tag_list_map = new HashMap<String, List<String>>();
 
+		
+		//加载所有filter-list标签
 		for (Element filter_list_tag : filter_list_tag_list) {
 
 			String name = getAttribute(filter_list_tag, "name");
@@ -142,6 +156,20 @@ public class FilterParse extends BaseParse {
 					"filter-ref");
 			filter_ref_tag_MapList.put(name, filter_ref_tag_list);
 
+			Assert.assertNotNull("filter_ref_tag_list is null",
+					filter_ref_tag_list);
+		}
+
+		for (Element filter_list_tag : filter_list_tag_list) {
+
+			String name = getAttribute(filter_list_tag, "name");
+		
+		
+			List<Element> filter_ref_tag_list = filter_ref_tag_MapList
+					.get(name);
+			Assert.assertNotNull("filter_ref_tag_list is null",
+					filter_ref_tag_list);
+
 			// 记录filter-list标签下filter-ref标签引用的过滤器名字(不包含filter-list标签的名字)
 			List<String> filterTagNames = new ArrayList<String>();
 
@@ -150,8 +178,8 @@ public class FilterParse extends BaseParse {
 			allParentNames.add(name);
 			paseFilterRefTag(filter_ref_tag_list, allParentNames,
 					filterTagNames);
-
-			filter_list_tag_list_map.put(name, allParentNames);
+			
+			filter_list_tag_list_map.put(name, filterTagNames);
 		}
 
 		for (Entry<String, List<String>> entry : filter_list_tag_list_map
@@ -195,14 +223,14 @@ public class FilterParse extends BaseParse {
 			// 0：不存在，1在filterMap里面，2：在filterMapList里面
 			int nameExistState = 0;
 
-			if (!isEmpty(filterMap, name)) {
+			if (isEmpty(filterMap, name)) {
 				nameExistState = 0;
 			} else {
 				nameExistState = 1;
 			}
 
 			if (nameExistState == 0) {
-				if (!isEmpty(filterMapList, name)) {
+				if (isEmpty(filter_ref_tag_MapList, name)) {
 					nameExistState = 0;
 				} else {
 					nameExistState = 2;
@@ -220,6 +248,7 @@ public class FilterParse extends BaseParse {
 			case 2:
 				List<Element> _filter_ref_tag_list = filter_ref_tag_MapList
 						.get(name);
+				
 				allParentNames.add(name);
 				paseFilterRefTag(_filter_ref_tag_list, allParentNames,
 						filterTagNames);
@@ -231,7 +260,25 @@ public class FilterParse extends BaseParse {
 
 	@SuppressWarnings("rawtypes")
 	private boolean isEmpty(HashMap map, String key) {
-		return map.containsKey(key);
+		if (map.containsKey(key)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	
+	
+	public HashMap<String, Class<?>> getFilterMap() {
+		return filterMap;
+	}
+
+	public HashMap<String, List<Class<?>>> getFilterMapList() {
+		return filterMapList;
+	}
+
+	public HashMap<String, List<Element>> getFilter_ref_tag_MapList() {
+		return filter_ref_tag_MapList;
 	}
 
 	public static void main(String[] args) {

@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
-<!DOCTYPE configs PUBLIC "-//wzf//custom dtd//EN">
-
-
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE configs PUBLIC -->
+<!-- "-//wzf//custom dtd//EN" -->
+<!-- ""> -->
 <configs>
 
-	<!-- 设置过滤器 -->
 	<filter-root>
+
 		<filter name="filter1" class="com.wzf.filter.TestActionFilter" />
 		<filter name="filter2" class="com.wzf.filter.Filter2" />
 		<filter name="filter3" class="com.wzf.filter.Filter3" />
@@ -20,8 +19,9 @@
 			<filter-ref name="filter1" />
 			<filter-ref name="filter2" />
 			<filter-ref name="filter3" />
+			<filter-ref name="filter3" />
 		</filter-list>
-		
+
 		<filter-list name="filter_list_3">
 			<filter-ref name="filter_list_2" />
 			<filter-ref name="filter2" />
@@ -30,17 +30,19 @@
 	</filter-root>
 
 
-	<!-- 设置控制器 -->
 	<controller-root>
 		<controller-list identifier="pc">
-			<controller name="test" class="com.wzf.chain.ApplController">
-				<action name="test">
+			<controller name="applController" class="com.wzf.chain.ApplController">
+				<action name="t_name1" method="test">
 					<filter-ref name="filter_list_1" />
+				</action>
+				<action name="t_name2" method="test">
+					<filter-ref name="filter_list_2" />
+				</action>
+				<action name="t_name3" method="test">
+					<filter-ref name="filter_list_3" />
 				</action>
 			</controller>
 		</controller-list>
 	</controller-root>
-
 </configs>
- 
-    
