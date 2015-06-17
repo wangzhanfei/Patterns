@@ -15,4 +15,8 @@ public class ApplController implements ApplicationController {
 			ResponseContext responseContext) {
 
 	}
+	
+	public void test(){
+		
+	}
 }

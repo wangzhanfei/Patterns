@@ -1,4 +1,4 @@
-package com.wzf.chain;
+package com.wzf.filter;
 
 import com.wzf.interfaces.RequestContext;
 import com.wzf.interfaces.ResponseContext;
