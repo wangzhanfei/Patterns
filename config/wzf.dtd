@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 配置标签根元素 -->
+<!ELEMENT configs (filter-root|controller-root|view-root|constant)*>
+
+<!-- 过滤器根元素 -->
+<!ELEMENT filter-root (filter-list|filter)>
+
+<!ELEMENT filter-list (filter-ref*)>
+
+<!-- 过滤器属性设置 -->
+<!ATTLIST filter-list
+    name CDATA #REQUIRED
+>
+
+<!ATTLIST filter
+    name CDATA #REQUIRED
+    class CDATA #REQUIRED
+>
+
+<!ATTLIST filter-ref
+    name CDATA #REQUIRED
+>
+
+<!-- 控制器根元素 -->
+<!ELEMENT controller-root (controller-list)>
+
+<!ELEMENT controller-list (controller*)>
+
+<!ELEMENT controller (action*)>
+
+<!ELEMENT action (filter-ref*)>
+
+<!-- 控制器属性设置 -->
+<!ATTLIST controller-list
+    identifier CDATA #REQUIRED
+>
+
+<!ATTLIST controller
+    name CDATA #REQUIRED
+    class CDATA #REQUIRED
+>
+
+<!ATTLIST action
+    name CDATA #REQUIRED
+>
+
+
+
+<!-- 视图根元素 -->
+<!ELEMENT view-root (view-list)>
+
+<!ELEMENT view-list (view)>
+
+<!ELEMENT view  (#PCDATA)>
+
+<!-- 视图属性设置 -->
+<!ATTLIST view
+    name CDATA #REQUIRED
+    path CDATA #REQUIRED
+>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
