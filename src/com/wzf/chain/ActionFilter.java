@@ -1,13 +1,10 @@
-package com.wzf.filter;
+package com.wzf.chain;
 
-import com.wzf.chain.ActionFilterChain;
 import com.wzf.interfaces.RequestContext;
 import com.wzf.interfaces.ResponseContext;
 
 public abstract class ActionFilter {
-	
-	protected String name=this.getClass().getSimpleName();
-	
+
 	/**
 	 * action前置处理
 	 */

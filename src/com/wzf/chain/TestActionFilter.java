@@ -1,4 +1,4 @@
-package com.wzf.filter;
+package com.wzf.chain;
 
 import com.wzf.interfaces.RequestContext;
 import com.wzf.interfaces.ResponseContext;
@@ -6,9 +6,6 @@ import com.wzf.interfaces.ResponseContext;
 public class TestActionFilter extends ActionFilter {
 
 	private String name = "";
-	
-	public TestActionFilter() {
-	}
 
 	public TestActionFilter(String name) {
 		this.name = name;
@@ -22,6 +19,11 @@ public class TestActionFilter extends ActionFilter {
 	@Override
 	public void doPostProcessing(RequestContext requestContext,
 			ResponseContext responseContext) {
+		if (responseContext == null) {
+			System.out.println("responseContext is null");
+		} else {
+			System.out.println("responseContext is not null");
+		}
 		System.out.println("post----" + name);
 	}
 

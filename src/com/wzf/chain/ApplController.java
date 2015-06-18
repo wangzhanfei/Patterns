@@ -1,22 +1,15 @@
 package com.wzf.chain;
 
-import com.wzf.interfaces.ApplicationController;
-import com.wzf.interfaces.RequestContext;
-import com.wzf.interfaces.ResponseContext;
 
-public class ApplController implements ApplicationController {
+public class ApplController extends BaseApplicationController {
 
-	public ResponseContext handleRequest(RequestContext requestContext) {
 
-		return null;
-	}
-
-	public void handleReponse(RequestContext requestContext,
-			ResponseContext responseContext) {
-
-	}
 	
 	public void test(){
-		
+		System.out.println("test");
+	}
+	
+	public void test2(){
+		System.out.println("test2");
 	}
 }

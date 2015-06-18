@@ -11,13 +11,13 @@ public class Filter3 extends ActionFilter {
 	
 	@Override
 	public void doPreProcessing(RequestContext requestContext) {
-
+		System.out.println("pre----" + name);
 	}
 
 	@Override
 	public void doPostProcessing(RequestContext requestContext,
 			ResponseContext responseContext) {
-
+		System.out.println("post----" + name);
 	}
 
 }

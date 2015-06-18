@@ -1,73 +1,43 @@
 package com.wzf.chain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.wzf.filter.ActionFilter;
-import com.wzf.filter.TestActionFilter;
+import com.wzf.constrant.Common;
+import com.wzf.constrant.State;
+import com.wzf.context.RequestWrapper;
+import com.wzf.factory.ApplicationControllerFactory;
 import com.wzf.interfaces.ApplicationController;
 import com.wzf.interfaces.RequestContext;
 import com.wzf.interfaces.ResponseContext;
+import com.wzf.xml_parse.ConfigMediator;
 
 public class Test {
 
 	public Test() {
 
-		List<ActionFilter> actionFilterList = new ArrayList<ActionFilter>();
+		ConfigMediator configMediator = new ConfigMediator(Common.filePath);
+		configMediator.startParse();
+		configMediator.clearData();
 
-		char a = '-';
-		for (int i = 0; i < 10; i++) {
+		RequestContext requestContext = new RequestWrapper();
+		requestContext.setAttribute(Common.PLATFORM, "pc");
+		requestContext.setAttribute(Common.APPLICATION_CONTROLLER_NAME,
+				"applController");
+		requestContext.setAttribute(Common.APPLICATION_ACTION_NAME, "t_name1");
 
-			String str = "";
-			for (int j = 0; j < i; j++) {
-				str += a;
-			}
-			str += i;
-			ActionFilter actionFilter = new TestActionFilter(str);
+		ApplicationControllerFactory controllerFactory = ApplicationControllerFactory
+				.getInstance();
+		ApplicationController controller = controllerFactory
+				.createApplicationController(requestContext);
 
-			actionFilterList.add(actionFilter);
+		System.out.println(requestContext.getStatus());
+		if (requestContext.getStatus() == State.CREATE_APPLICATION_CONTROLLER_SUCCESS) {
+			ActionFilterChain actionFilterChain = new ActionFilterChain(
+					controller);
+			actionFilterChain.addAll(controller.getActionFilterList());
+
+			ResponseContext responseContext = actionFilterChain
+					.doFilter(requestContext);
 		}
 
-		ApplicationController controller = new ApplController();
-
-		ActionFilterChain actionFilterChain = new ActionFilterChain(controller);
-		actionFilterChain.addAll(actionFilterList);
-
-		RequestContext requestContext = new RequestContext() {
-
-			@Override
-			public void setAttribute(String name, Object object) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public Object getAttribute(String name) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public void validate() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public String getCommandName() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
-
-		ResponseContext responseContext = actionFilterChain
-				.doFilter(requestContext);
-
-		// if (responseContext == null) {
-		// System.out.println("requestContext is null");
-		// } else {
-		// System.out.println("requestContext is not null");
-		// }
 	}
 
 	public static void main(String[] args) {

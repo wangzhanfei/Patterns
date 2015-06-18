@@ -19,7 +19,6 @@
 			<filter-ref name="filter1" />
 			<filter-ref name="filter2" />
 			<filter-ref name="filter3" />
-			<filter-ref name="filter3" />
 		</filter-list>
 
 		<filter-list name="filter_list_3">
@@ -36,11 +35,8 @@
 				<action name="t_name1" method="test">
 					<filter-ref name="filter_list_1" />
 				</action>
-				<action name="t_name2" method="test">
+				<action name="t_name2" method="test2">
 					<filter-ref name="filter_list_2" />
-				</action>
-				<action name="t_name3" method="test">
-					<filter-ref name="filter_list_3" />
 				</action>
 			</controller>
 		</controller-list>

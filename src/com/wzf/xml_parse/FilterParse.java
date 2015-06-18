@@ -12,6 +12,9 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
+import com.wzf.filter.ActionFilter;
+
+
 public class FilterParse extends BaseParse {
 
 	/**
@@ -121,6 +124,11 @@ public class FilterParse extends BaseParse {
 			Class<?> cls = null;
 			try {
 				cls = Class.forName(clsName);
+				Class<?> actionFilterCls=ActionFilter.class;
+				
+				// if(!cls.equals(actionFilterCls)){
+				// throwException(null, clsName+"不是过滤器类型,过滤器需要继承ActionFilter");
+				// }
 			} catch (ClassNotFoundException e) {
 				throwException(cls, name + "   没有发现类");
 			}
