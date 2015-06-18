@@ -1,4 +1,4 @@
-package com.wzf.chain;
+package com.wzf.controller.application;
 
 
 public class ApplController extends BaseApplicationController {

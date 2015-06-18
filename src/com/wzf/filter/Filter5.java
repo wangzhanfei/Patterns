@@ -3,16 +3,7 @@ package com.wzf.filter;
 import com.wzf.interfaces.RequestContext;
 import com.wzf.interfaces.ResponseContext;
 
-public class TestActionFilter extends ActionFilter {
-
-	private String name = "";
-	
-	public TestActionFilter() {
-	}
-
-	public TestActionFilter(String name) {
-		this.name = name;
-	}
+public class Filter5 extends ActionFilter {
 
 	@Override
 	public void doPreProcessing(RequestContext requestContext) {

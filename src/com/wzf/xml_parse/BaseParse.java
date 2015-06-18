@@ -5,23 +5,21 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import com.wzf.ThrowException;
+import com.wzf.error.exceptions.ThrowException;
 import com.wzf.test.Log;
 
 public abstract class BaseParse {
 
-	private String filePath = "E:\\MyEclipse\\Patterns\\config\\filter-config.xml";
-
 	protected Log log = Log.getInstance();
 
 	protected Document document;
-
-	public abstract void startParse();
 
 	@SuppressWarnings("unchecked")
 	protected List<Element> getElementList(Element node, String childNode) {
@@ -43,48 +41,43 @@ public abstract class BaseParse {
 		}
 	}
 
-	protected Document getDocument() throws DocumentException,
-			FileNotFoundException {
+	protected Document getDocument(String filePath) {
+		File file = new File(filePath);
 
-		if (document != null) {
-			return document;
+		Document document = null;
+		try {
+			FileInputStream fis = new FileInputStream(file);
+
+			SAXReader reader = new SAXReader();
+			document = reader.read(fis);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			e.printStackTrace();
 		}
-		File file = new File(filePath);
 
-		// try {
-		FileInputStream fis = new FileInputStream(file);
-
-		// ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		// int len = -1;
-		// byte buf[] = new byte[1024 * 8];
-		// while ((len = fis.read(buf)) != -1) {
-		// bos.write(buf, 0, len);
-		// }
-		// bos.flush();
-		// bos.close();
-		// System.out.println(bos.toString());
-		// } catch (FileNotFoundException e) {
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
-		SAXReader reader = new SAXReader();
-		Document document = reader.read(fis);
+		Assert.assertNotNull("document is null", document);
 		return document;
 	}
 
-	protected Document getDocument(String filePath) throws DocumentException,
-			FileNotFoundException {
-		System.out.println(filePath);
-		File file = new File(filePath);
+	protected abstract List<Element> parse(Document document);
 
-		FileInputStream fis = new FileInputStream(file);
+	protected String getPath(String configFileDir, String filePath) {
 
-		SAXReader reader = new SAXReader();
-		Document document = reader.read(fis);
-		return document;
+		String file = "";
+		if (filePath.startsWith("/")) {
+			file = configFileDir + filePath;
+		} else {
+			file = configFileDir + File.separator + filePath;
+		}
+		
+		//这里需要根据平台转换,如果是windows平台，需要使用\，linux平台需要/
+		
+		file = file.replace("/", File.separator);
+
+		return file;
 	}
+	
+	public abstract void print();
 
 }

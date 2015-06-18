@@ -1,6 +1,5 @@
 package com.wzf.xml_parse;
 
-import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,9 +9,9 @@ import java.util.Map.Entry;
 import junit.framework.Assert;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
+import com.wzf.constrant.Common;
 import com.wzf.datatype.ActionInfo;
 import com.wzf.datatype.ControllerInfo;
 
@@ -22,50 +21,46 @@ public class ControllerParse extends BaseParse {
 
 	public ControllerParse() {
 	}
-	
+
 	public ControllerParse(Document document) {
-		this.document=document;
+		this.document = document;
 	}
-	
-	@Override
-	public void startParse() {
-		try {
-			Document document = getDocument();
-			parse(document);
-		} catch (DocumentException e) {
-			throwException(null, "没有发现配置文件");
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+
+	public void startParse(String filePath) {
+		Document document = getDocument(filePath);
+		parse(document);
 	}
 
 	public void print() {
-
+		System.out.println();
+		System.out.println("----------------控制器标签  start------------------");
 		for (Entry<String, HashMap<String, ControllerInfo>> platform : controllerTagListMap
 				.entrySet()) {
 
 			String name = platform.getKey();
 			HashMap<String, ControllerInfo> map = platform.getValue();
-
+			
+			System.out.println("			平台名称："+name);
+			
 			for (Entry<String, ControllerInfo> controllerList : map.entrySet()) {
 				String name1 = controllerList.getKey();
 				ControllerInfo controllerInfo = controllerList.getValue();
-				System.out.println(name + "    " + name1 + "    "
+				System.out.println("    控制器名称：" + name1 + "    "
 						+ controllerInfo.toString());
 			}
 		}
-
+		System.out.println("----------------控制器标签  end------------------");
 	}
 
-	private void parse(Document document) {
-
+	@Override
+	protected List<Element> parse(Document document) {
 		Element rootNode = document.getRootElement();
 		List<Element> controller_root_tag = getElementList(rootNode,
 				"controller-root");
 		Assert.assertNotNull("controller_root_tag is null", controller_root_tag);
 
 		parseControllerRootTag(controller_root_tag);
+		return controller_root_tag;
 	}
 
 	/**
@@ -134,7 +129,7 @@ public class ControllerParse extends BaseParse {
 					action_tag_list, cls);
 
 			controllerInfo.setActionMapper(actionMapper);
-			
+
 			controllerInfoMap.put(controllerName, controllerInfo);
 		}
 
@@ -171,7 +166,7 @@ public class ControllerParse extends BaseParse {
 			List<Element> filter_ref_tag_list = getElementList(action_tag,
 					"filter-ref");
 			List<String> filterRefList = parseFilterRef(filter_ref_tag_list);
-			
+
 			actionInfo.setFilterRefList(filterRefList);
 
 			actionMapper.put(actionName, actionInfo);
@@ -180,7 +175,7 @@ public class ControllerParse extends BaseParse {
 	}
 
 	private List<String> parseFilterRef(List<Element> filter_ref_tag_list) {
-		
+
 		List<String> list = new ArrayList<String>();
 
 		for (Element filter_reg_tag : filter_ref_tag_list) {
@@ -191,38 +186,21 @@ public class ControllerParse extends BaseParse {
 
 		return list;
 	}
-	
-	
+
 	public HashMap<String, HashMap<String, ControllerInfo>> getControllerTagListMap() {
 		return controllerTagListMap;
 	}
 
 	public static void main(String[] args) {
-		ControllerParse parse=new ControllerParse();
-		parse.startParse();
+		classTest();
+	}
+
+	private static void classTest() {
+		ControllerParse parse = new ControllerParse();
+		String file=Common.configFileDir + "\\"
+				+ "pc\\contoller-config.xml";
+		parse.startParse(file);
 		parse.print();
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

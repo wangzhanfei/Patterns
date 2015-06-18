@@ -48,13 +48,17 @@
 
 
 <!-- 视图根元素 -->
-<!ELEMENT view-root (view-list)>
+<!ELEMENT view-root (view-list*)>
 
-<!ELEMENT view-list (view)>
+<!ELEMENT view-list (view*)>
 
 <!ELEMENT view  (#PCDATA)>
 
 <!-- 视图属性设置 -->
+<!ATTLIST view-list
+    name CDATA #REQUIRED
+>
+
 <!ATTLIST view
     name CDATA #REQUIRED
     path CDATA #REQUIRED
@@ -62,8 +66,7 @@
 
 <!-- 引用文件 -->
 <!ATTLIST include
-    name CDATA #REQUIRED
-    path CDATA #REQUIRED
+    file CDATA #REQUIRED
 >
 
 

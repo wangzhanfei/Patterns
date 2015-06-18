@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE configs PUBLIC -->
+<!-- "-//wzf//custom dtd//EN" -->
+<!-- ""> -->
+<configs>
+
+	<filter-root>
+		<filter name="filter4" class="com.wzf.filter.Filter4" />
+		<filter name="filter5" class="com.wzf.filter.Filter5" />
+
+		<filter-list name="filter_list_4">
+			<filter-ref name="filter1" />
+			<filter-ref name="filter4" />
+		</filter-list>
+
+		<filter-list name="filter_list_5">
+			<filter-ref name="filter1" />
+			<filter-ref name="filter4" />
+			<filter-ref name="filter5" />
+		</filter-list>
+
+	</filter-root>
+	
+</configs>

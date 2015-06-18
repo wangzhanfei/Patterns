@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configs PUBLIC
+"-//wzf//custom dtd//EN"
+"">
+<configs>
+
+	<view-root>
+		<view-list name="">
+			<view name="a" path="a"></view>
+			<view name="b" path="b"></view>
+			<view name="c" path="c"></view>
+			<view name="d" path="d"></view>
+			<view name="e" path="e"></view>
+			<view name="f" path="f"></view>
+			<view name="g" path="g"></view>
+			<view name="h" path="h"></view>
+			<view name="i" path="i"></view>
+			<view name="j" path="j"></view>
+			<view name="k" path="k"></view>
+		</view-list>
+	</view-root>
+
+</configs>

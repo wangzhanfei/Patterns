@@ -3,7 +3,7 @@ package com.wzf.datatype;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-public class ControllerInfo {
+public final class ControllerInfo {
 
 	private HashMap<String, ActionInfo> actionMapper = new HashMap<String, ActionInfo>();
 
@@ -27,12 +27,12 @@ public class ControllerInfo {
 
 	@Override
 	public String toString() {
-		String string = "";
+		String string = "\n		------控制器action信息\n";
 		for (Entry<String, ActionInfo> entry : actionMapper.entrySet()) {
 			String name = entry.getKey();
 			ActionInfo actionInfo = entry.getValue();
 
-			string += "action name=" + name + "     " + actionInfo.toString() + "\n";
+			string += "			------action名称：" + name + "     " + actionInfo.toString() + "\n";
 		}
 		return string;
 	}

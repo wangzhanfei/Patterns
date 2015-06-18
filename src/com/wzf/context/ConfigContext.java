@@ -13,7 +13,7 @@ public class ConfigContext {
 	/**
 	 * 单个过滤器缓存  1对1
 	 */
-	private static HashMap<String, Class<?>> filterMap;
+	// private static HashMap<String, Class<?>> filterMap;
 
 	/**
 	 * 一组过滤器缓存 1对多
@@ -37,18 +37,18 @@ public class ConfigContext {
 		}
 	}
 
-	public static void setFilterMap(HashMap<String, Class<?>> filterMap) {
-		ConfigContext.filterMap = filterMap;
-	}
+	// public static void setFilterMap(HashMap<String, Class<?>> filterMap) {
+	// ConfigContext.filterMap = filterMap;
+	// }
 
 	public static void setFilterListMap(
 			HashMap<String, List<Class<?>>> filterListMap) {
 		ConfigContext.filterListMap = filterListMap;
 	}
 
-	public static HashMap<String, Class<?>> getFilterMap() {
-		return filterMap;
-	}
+	// public static HashMap<String, Class<?>> getFilterMap() {
+	// return filterMap;
+	// }
 
 	public static HashMap<String, List<Class<?>>> getFilterListMap() {
 		return filterListMap;

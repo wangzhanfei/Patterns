@@ -1,6 +1,5 @@
 package com.wzf.xml_parse;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,7 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
+import org.dom4j.Element;
 
 import com.wzf.constrant.Common;
 import com.wzf.context.ConfigContext;
@@ -17,56 +16,63 @@ import com.wzf.datatype.ControllerInfo;
 
 public class ConfigMediator extends BaseParse {
 
-	private ControllerParse controllerParse;
+	// 解析入口
+	private ParseEntry parseEntry = new ParseEntry();
 
-	private FilterParse filterParse;
+	public ConfigMediator() {
 
-	public ConfigMediator(String filePath) {
-
-		Document document = null;
-		try {
-			document = getDocument(filePath);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (DocumentException e) {
-			e.printStackTrace();
-		}
-
-		filterParse = new FilterParse(document);
-
-		controllerParse = new ControllerParse(document);
 	}
 
-	@Override
-	public void startParse() {
+	public void startParse(String filePath) {
 
-		filterParse.startParse();
-		controllerParse.startParse();
+		parseEntry.startParse(filePath);
 
 		mergeData();
 
-		ConfigContext.setFilterListMap(filterParse.getFilterMapList());
-		ConfigContext.setFilterMap(filterParse.getFilterMap());
-		ConfigContext.setApplicationControllerMapper(controllerParse
-				.getControllerTagListMap());
+		assignData();
+	}
 
+	/**
+	 * @param filePath  配置文件最顶层文件
+	 * @param clearRef  true加载完后清除应用
+	 */
+	public void startParse(String filePath, boolean clearRef) {
+
+		startParse(filePath);
+		if (clearRef) {
+			clearData();
+		}
+	}
+
+	private void assignData() {
+
+		ConfigContext.setFilterListMap(parseEntry.getFilterParse()
+				.getFilterMapList());
+		// ConfigContext.setFilterMap(parseEntry.getFilterParse().getFilterMap());
+		ConfigContext.setApplicationControllerMapper(parseEntry
+				.getControllerParse().getControllerTagListMap());
+	}
+
+	@Override
+	protected List<Element> parse(Document document) {
+		return null;
 	}
 
 	/**
 	 * 取消引用
 	 */
 	public void clearData() {
-		filterParse = null;
-		controllerParse = null;
+		parseEntry = null;
 	}
 
 	private void mergeData() {
-		HashMap<String, List<Class<?>>> clsListMap = filterParse
-				.getFilterMapList();
-		HashMap<String, Class<?>> clsMap = filterParse.getFilterMap();
+		HashMap<String, List<Class<?>>> clsListMap = parseEntry
+				.getFilterParse().getFilterMapList();
+		HashMap<String, Class<?>> clsMap = parseEntry.getFilterParse()
+				.getFilterMap();
 
-		HashMap<String, HashMap<String, ControllerInfo>> platformMaps = controllerParse
-				.getControllerTagListMap();
+		HashMap<String, HashMap<String, ControllerInfo>> platformMaps = parseEntry
+				.getControllerParse().getControllerTagListMap();
 
 		for (Entry<String, HashMap<String, ControllerInfo>> entry : platformMaps
 				.entrySet()) {
@@ -103,7 +109,7 @@ public class ConfigMediator extends BaseParse {
 						}
 					}
 					actionInfo.setClsList(allClsList);
-					actionInfo.setFilterRefList(null);
+					// actionInfo.setFilterRefList(null);
 				}
 			}
 
@@ -111,7 +117,7 @@ public class ConfigMediator extends BaseParse {
 	}
 
 	public void print() {
-		controllerParse.print();
+		parseEntry.print();
 	}
 
 	public static long getTime() {
@@ -119,14 +125,16 @@ public class ConfigMediator extends BaseParse {
 	}
 
 	public static void main(String[] args) {
+		classTest();
+	}
+
+	private static void classTest() {
 		long startTime = getTime();
-		String filePath = Common.filePath;
-		ConfigMediator mediator = new ConfigMediator(filePath);
-		mediator.startParse();
+		ConfigMediator mediator = new ConfigMediator();
+		mediator.startParse(Common.configFilePath);
 		mediator.print();
 		mediator.clearData();
 		long endTime = getTime();
-
 		System.out.println("耗时:" + (endTime - startTime));
 	}
 

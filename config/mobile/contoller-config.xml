@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE configs PUBLIC -->
+<!-- "-//wzf//custom dtd//EN" -->
+<!-- ""> -->
+<configs>
+
+	<controller-root>
+		<controller-list identifier="mobile">
+			<controller name="applController" class="com.wzf.controller.application.ApplController">
+				<action name="t_name1" method="test">
+					<filter-ref name="filter_list_1" />
+				</action>
+				<action name="t_name2" method="test2">
+					<filter-ref name="filter_list_5" />
+				</action>
+			</controller>
+		</controller-list>
+	</controller-root>
+	
+</configs>

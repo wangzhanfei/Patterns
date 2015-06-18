@@ -12,9 +12,9 @@ public class RequestWrapper implements RequestContext{
 
 	HashMap<String, Object> mapper=new HashMap<String, Object>();
 	
-	private List<Integer> stateList=new ArrayList<Integer>();
+	private List<State> stateList=new ArrayList<State>();
 	
-	private int state=State.COMMON_ERROR;
+	private State state=State.COMMON_ERROR;
 	
 	@Override
 	public void setAttribute(String name, Object object) {
@@ -39,18 +39,18 @@ public class RequestWrapper implements RequestContext{
 	}
 
 	@Override
-	public int getStatus() {
+	public State getStatus() {
 		return state;
 	}
 
 	@Override
-	public void setStatues(Integer stateNum) {
+	public void setStatues(State stateNum) {
 		state=stateNum;
 		stateList.add(stateNum);
 	}
 
 	@Override
-	public List<Integer> getStatusList() {
+	public List<State> getStatusList() {
 		return stateList;
 	}
 

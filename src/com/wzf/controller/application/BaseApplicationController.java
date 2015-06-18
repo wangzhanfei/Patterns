@@ -1,4 +1,4 @@
-package com.wzf.chain;
+package com.wzf.controller.application;
 
 import com.wzf.interfaces.ApplicationController;
 import com.wzf.interfaces.RequestContext;

@@ -1,4 +1,4 @@
-package com.wzf;
+package com.wzf.error.exceptions;
 
 public class ThrowException extends RuntimeException {
 	/**

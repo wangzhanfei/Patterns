@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE configs PUBLIC -->
+<!-- "-//wzf//custom dtd//EN" -->
+<!-- ""> -->
+<configs>
+
+	<!-- pc配置 -->
+	<!-- 过滤器文件 -->
+	<include file="pc/filter-config.xml" />
+	<!-- 控制器文件 -->
+	<include file="pc/contoller-config.xml" />
+	
+	
+	<!-- mobile配置 -->
+	<!-- 过滤器文件 -->
+	<include file="mobile/filter-config.xml" />
+	<!-- 控制器文件 -->
+	<include file="mobile/contoller-config.xml" />
+	
+	
+</configs>

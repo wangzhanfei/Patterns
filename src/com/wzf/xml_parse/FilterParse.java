@@ -1,6 +1,5 @@
 package com.wzf.xml_parse;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,11 +8,9 @@ import java.util.Map.Entry;
 import junit.framework.Assert;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
-import com.wzf.filter.ActionFilter;
-
+import com.wzf.constrant.Common;
 
 public class FilterParse extends BaseParse {
 
@@ -37,70 +34,75 @@ public class FilterParse extends BaseParse {
 	public FilterParse() {
 
 	}
-	
+
 	public FilterParse(Document document) {
-		this.document=document;
+		this.document = document;
 	}
-	
 
 	public void print() {
+		System.out.println("------------过滤器标签  start--------------");
+		System.out.println("			------------单个过滤器 start--------------");
 		for (Entry<String, Class<?>> entry : filterMap.entrySet()) {
 			String name = entry.getKey();
 			String path = entry.getValue().getName();
-			System.out.println(name + "   " + path);
+			System.out.println("			" + name + "   " + path);
 		}
-		System.out.println("过滤器链...................");
+		System.out.println("			------------单个过滤器 end--------------");
+		System.out.println();
+		System.out.println("			------------过滤器列表 start--------------");
 		for (Entry<String, List<Class<?>>> entry : filterMapList.entrySet()) {
 			String name = entry.getKey();
 			List<Class<?>> pathList = entry.getValue();
-			System.out.println("---------------------------------------------");
+			System.out
+					.println("			---------------------------------------------");
+			System.out.println("	过滤器列表名称:" + name);
 			for (Class<?> class1 : pathList) {
-				System.out.println(name + "    " + class1.getName());
+				System.out.println("			    " + class1.getName());
 			}
 		}
+		System.out.println("			------------过滤器列表 start--------------");
+
+		System.out.println("------------过滤器标签  end--------------");
 	}
 
-	@Override
-	public void startParse() {
-		try {
-			Document document = getDocument();
-			parse(document);
-		} catch (DocumentException e) {
-			// throwException(null, "没有发现配置文件");
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void startParse(String filePath) {
+
+		Document document = getDocument(filePath);
+		List<Element> filter_root_tag_list = parse(document);
+
+		parseAllFilterTag(filter_root_tag_list);
+		parseAllFilterListTag(filter_root_tag_list);
 	}
 
 	/**
 	 * 解析filter-root
 	 * @param document
+	 * @return 
 	 */
-	private void parse(Document document) {
+	@Override
+	protected List<Element> parse(Document document) {
 		Element rootNode = document.getRootElement();
 
 		List<Element> filter_root_tag_list = getElementList(rootNode,
 				"filter-root");
-		parseFilterRoot(filter_root_tag_list);
+		return filter_root_tag_list;
 	}
 
-	/**
-	 *  解析filter和filter-list
-	 * @param filter_root_tag_list
-	 */
-	private void parseFilterRoot(List<Element> filter_root_tag_list) {
+	protected void parseAllFilterTag(List<Element> filter_root_tag_list) {
 
 		for (Element element : filter_root_tag_list) {
-
 			List<Element> filter_tag_list = getElementList(element, "filter");
-			paseFilterTag(filter_tag_list);
+			parseFilterTag(filter_tag_list);
+		}
+	}
+
+	protected void parseAllFilterListTag(List<Element> filter_root_tag_list) {
+
+		for (Element element : filter_root_tag_list) {
 
 			List<Element> filter_list_tag_list = getElementList(element,
 					"filter-list");
 			paseFilterListTag(filter_list_tag_list);
-
 		}
 	}
 
@@ -108,24 +110,24 @@ public class FilterParse extends BaseParse {
 	 * 解析标签filter
 	 * @param filter_tag_list
 	 */
-	private void paseFilterTag(List<Element> filter_tag_list) {
+	private void parseFilterTag(List<Element> filter_tag_list) {
 
-		for (Element filter : filter_tag_list) {
-			String name = getAttribute(filter, "name");
+		for (Element filter_tag : filter_tag_list) {
+			String name = getAttribute(filter_tag, "name");
 			throwException(name, "过滤器没有填写名字");
 
 			if (!isEmpty(filterMap, name)) {
 				throwException(null, "filter name:" + name + "：重复输入");
 			}
 
-			String clsName = getAttribute(filter, "class");
+			String clsName = getAttribute(filter_tag, "class");
 			throwException(name, "过滤器没有填写类名");
 
 			Class<?> cls = null;
 			try {
 				cls = Class.forName(clsName);
-				Class<?> actionFilterCls=ActionFilter.class;
-				
+				// Class<?> actionFilterCls = ActionFilter.class;
+
 				// if(!cls.equals(actionFilterCls)){
 				// throwException(null, clsName+"不是过滤器类型,过滤器需要继承ActionFilter");
 				// }
@@ -149,8 +151,7 @@ public class FilterParse extends BaseParse {
 		// 4.在3的过程中不能重复引用已经出现过的filter-list标签（不能名字重复）,不能重复是对于单个filter-list标签列表
 		HashMap<String, List<String>> filter_list_tag_list_map = new HashMap<String, List<String>>();
 
-		
-		//加载所有filter-list标签
+		// 加载所有filter-list标签
 		for (Element filter_list_tag : filter_list_tag_list) {
 
 			String name = getAttribute(filter_list_tag, "name");
@@ -171,8 +172,7 @@ public class FilterParse extends BaseParse {
 		for (Element filter_list_tag : filter_list_tag_list) {
 
 			String name = getAttribute(filter_list_tag, "name");
-		
-		
+
 			List<Element> filter_ref_tag_list = filter_ref_tag_MapList
 					.get(name);
 			Assert.assertNotNull("filter_ref_tag_list is null",
@@ -186,7 +186,7 @@ public class FilterParse extends BaseParse {
 			allParentNames.add(name);
 			paseFilterRefTag(filter_ref_tag_list, allParentNames,
 					filterTagNames);
-			
+
 			filter_list_tag_list_map.put(name, filterTagNames);
 		}
 
@@ -256,13 +256,12 @@ public class FilterParse extends BaseParse {
 			case 2:
 				List<Element> _filter_ref_tag_list = filter_ref_tag_MapList
 						.get(name);
-				
+
 				allParentNames.add(name);
 				paseFilterRefTag(_filter_ref_tag_list, allParentNames,
 						filterTagNames);
 				break;
 			}
-
 		}
 	}
 
@@ -275,8 +274,6 @@ public class FilterParse extends BaseParse {
 		}
 	}
 
-	
-	
 	public HashMap<String, Class<?>> getFilterMap() {
 		return filterMap;
 	}
@@ -290,8 +287,16 @@ public class FilterParse extends BaseParse {
 	}
 
 	public static void main(String[] args) {
+		classTest();
+	}
+
+	private static void classTest() {
 		FilterParse filterParse = new FilterParse();
-		filterParse.startParse();
+		String file=Common.configFileDir + "\\"
+				+ "pc\\filter-config.xml";
+		System.out.println(file);
+		filterParse.startParse(file);
+
 		filterParse.print();
 	}
 }

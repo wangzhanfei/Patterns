@@ -3,12 +3,12 @@ package com.wzf.datatype;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class ActionInfo {
+public final class ActionInfo {
 
 	private List<String> filterRefList;
 
 	private List<Class<?>> clsList;
-	
+
 	private String actionName;
 
 	private Method method;
@@ -47,12 +47,15 @@ public class ActionInfo {
 
 	@Override
 	public String toString() {
-//		Assert.assertNotNull("filterRefList is null", filterRefList);
+		// Assert.assertNotNull("filterRefList is null", filterRefList);
+		if (clsList == null) {
+			return "";
+		}
 		String string = "\n----------过滤器start\n";
 		for (Class<?> str : clsList) {
 			string += str.getName() + "    \n";
 		}
-		string+="----------过滤器end\n";
+		string += "----------过滤器end\n";
 		string += "actionName=" + actionName + "    methodName="
 				+ method.getName();
 		return string;
